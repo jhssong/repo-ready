@@ -1,0 +1,51 @@
+#!/bin/bash
+
+echo "Running Prettier on staged files..."
+
+# Check Prettier installation
+if ! command -v npx > /dev/null; then
+    echo "Error: npx not found. Please install Node.js and npm/yarn."
+    exit 1
+fi
+
+# Get staged files with relevant extensions for JavaScript/TypeScript projects
+# Only check .js, .jsx, .ts, .tsx, .mjs, .cjs files
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(js|jsx|ts|tsx|mjs|cjs)$' | sed 's| |\\ |g')
+[ -z "$FILES" ] && exit 0 # Exit if no relevant files are staged
+
+# Run Prettier check
+echo "$FILES" | xargs npx prettier --ignore-unknown --check
+
+# Echo the result of Prettier check
+if [ $? -ne 0 ]; then
+    echo ""
+    echo "Prettier check failed. Please fix the formatting by running:"
+    echo ""
+    echo "  npx prettier --write <filename(s)>"
+    echo ""
+    echo "Then re-stage the files and commit again."
+    exit 1
+fi
+
+echo "Prettier check passed."
+
+exit 0
+
+# ===== SKIP ESLINT CHECK ===== #
+# echo "Running ESLint on staged files..."
+
+# npm run lint
+
+# if [ $? -ne 0 ]; then
+#     echo ""
+#     echo "ESLint check failed. Please fix the lint errors by running:"
+#     echo ""
+#     echo "  npx eslint <filename(s)> --fix"
+#     echo ""
+#     echo "Then re-stage the files and commit again."
+#     exit 1
+# else
+#     echo "ESLint check passed."
+# fi
+
+# exit 0

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Configurable project key - USER MUST EDIT THIS MANUALLY AFTER SETUP
+# Replace {{PROJECT_KEY_PLACEHOLDER}} with your actual Jira project key (e.g., PROJ, DEV)
+PROJECT_KEY="{{PROJECT_KEY_PLACEHOLDER}}"
+
+# Get current branch name
+branch=$(git symbolic-ref --short HEAD)
+
+# If the target branch is exactly "main", bypass all checks and exit successfully.
+if [ "$branch" = "main" ]; then
+  echo "✅ Branch name 'main' bypassed format checks."
+  exit 0
+fi
+
+# Allowed types (Conventional Commits types)
+type_pattern="(feat|fix|hotfix|build|ci|chore|style|docs|refactor|test)"
+# Full pattern: type/PROJECT_KEY-number-summary (e.g., feat/PROJ-123-add-feature)
+full_pattern="^${type_pattern}/${PROJECT_KEY}-[0-9]+-[a-z0-9-]+$"
+
+if [[ "$PROJECT_KEY" == "{{PROJECT_KEY_PLACEHOLDER}}" ]]; then
+  echo "❌ Push rejected: PROJECT_KEY in pre-push hook is not configured."
+  echo "Please edit .githooks/pre-push and replace '{{PROJECT_KEY_PLACEHOLDER}}' with your actual Jira project key."
+  exit 1
+fi
+
+if [[ ! "$branch" =~ $full_pattern ]]; then
+  echo "❌ Push rejected: invalid branch name '$branch'"
+  echo "✅ Expected format: <type>/${PROJECT_KEY}-<number>-<summary>"
+  echo "   Example: feat/${PROJECT_KEY}-123-login-page"
+  echo ""
+  echo "💡 To fix this, you can rename your branch using:"
+  echo "   git branch -m <type>/${PROJECT_KEY}-<number>-<summary>"
+  echo "   (e.g., git branch -m feat/${PROJECT_KEY}-123-your-feature-summary)"
+  exit 1
+fi
+
+echo "✅ Branch name is valid: '$branch'"
+
+echo "Pre-push hook finished successfully."
+exit 0

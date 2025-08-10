@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Get current branch name
+branch=$(git symbolic-ref --short HEAD)
+
+# If the target branch is exactly "main", bypass all checks and exit successfully.
+if [ "$branch" = "main" ]; then
+  echo "✅ Branch name 'main' bypassed format checks."
+  exit 0
+fi
+
+# Allowed types (Conventional Commits types)
+type_pattern="(feat|fix|hotfix|build|ci|chore|style|docs|refactor|test)"
+# Full pattern: type/number-summary (e.g., feat/123-add-feature)
+full_pattern="^${type_pattern}/[0-9]+-[a-z0-9-]+$"
+
+if [[ ! "$branch" =~ $full_pattern ]]; then
+  echo "❌ Push rejected: invalid branch name '$branch'"
+  echo "✅ Expected format: <type>/<number>-<summary>"
+  echo "   Example: feat/123-login-page"
+  echo ""
+  echo "💡 To fix this, you can rename your branch using:"
+  echo "   git branch -m <type>/<number>-<summary>"
+  echo "   (e.g., git branch -m feat/123-your-feature-summary)"
+  exit 1
+fi
+
+echo "✅ Branch name is valid: '$branch'"
+
+echo "Pre-push hook finished successfully."
+exit 0

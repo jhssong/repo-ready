@@ -1,0 +1,67 @@
+#!/bin/bash
+
+commit_msg_file="$1"
+title=$(head -n1 "$commit_msg_file")
+
+# If the commit title is exactly "init", bypass all checks and exit successfully.
+if [ "$title" = "init" ]; then
+  echo "✅ Commit title 'init' bypassed format checks."
+  exit 0
+fi
+
+# If a merge is in progress, bypass all checks and exit successfully.
+if [ -f ".git/MERGE_HEAD" ]; then
+  echo "➡️ Commit-msg hook: Skipping all checks for merge commit in progress."
+  exit 0
+fi
+
+# Title must be 50 characters or fewer
+if [ ${#title} -gt 50 ]; then
+  echo "⚠️  Warning: The commit title is ${#title} characters long."
+  echo "    It is recommended to keep it within 50 characters."
+fi
+
+# Must follow the format: 'type: Subject'
+if [[ ! "$title" =~ ^[^[:space:]]+:\  ]]; then
+  echo "❌ The commit title must follow the format 'type: Subject' with a space after the colon."
+  echo "   Example: feat: Add new login page"
+  exit 1
+fi
+
+# First letter of subject must be uppercase
+message_part=$(echo "$title" | sed -E 's/^[^:]+: //')
+first_letter=$(echo "$message_part" | cut -c1)
+if [[ ! "$first_letter" =~ [A-Z] ]]; then
+  echo "❌ The first letter of the subject must be uppercase. Found: '$first_letter'"
+  exit 1
+fi
+
+# Title must end with an English letter (no punctuation)
+last_char=${title: -1}
+if [[ ! "$last_char" =~ [a-zA-Z0-9\'\"] ]]; then
+  echo "❌ The title must end with an English letter, number, single quote, or double quote. Found: '$last_char'"
+  exit 1
+fi
+
+# Type must be one of the allowed types
+type=$(echo "$title" | cut -d':' -f1)
+type_pattern=(feat fix hotfix build ci chore style docs refactor test)
+
+valid=false
+for t in "${type_pattern[@]}"; do
+  if [[ "$type" == "$t" ]]; then
+    valid=true
+    break
+  fi
+done
+
+if [ "$valid" = false ]; then
+  echo "❌ '$type' is not an allowed type."
+  echo "✅ Allowed types: ${type_pattern[*]}"
+  exit 1
+fi
+
+# ✅ Passed all checks
+echo "✅ Commit message is valid."
+exit 0
+

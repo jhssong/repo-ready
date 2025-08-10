@@ -1,0 +1,42 @@
+name: Update Templates Documentation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened] 
+    paths:
+      - 'src/config/template-sources.json' # Workflow runs only when this file changes in the PR
+
+jobs:
+  update-doc:
+    runs-on: ubuntu-latest 
+    permissions:
+      contents: write # Grant write permission to the GITHUB_TOKEN for this job
+
+    steps:
+      - name: Checkout PR branch 
+        uses: actions/checkout@v4
+        with:          
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js 
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Generate and Update Documentation # Run the documentation generation script
+        id: generate_doc
+        run: node scripts/generate-templates-doc.js
+
+      - name: Commit and Push if changes exist 
+        # Execute only if the 'files_changed' output from the previous step (generate_doc) is 'true'
+        if: steps.generate_doc.outputs.files_changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/config/AVAILABLE_REMOTE_TEMPLATES.md
+          git commit -m "docs: Auto-update AVAILABLE_REMOTE_TEMPLATES.md based on template-sources.json in PR #${{ github.event.pull_request.number }}"
+          git push

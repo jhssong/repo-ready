@@ -1,0 +1,125 @@
+{
+  "templates": [
+    {
+      "id": 1,
+      "name": "Repo-ready Github Templates",
+      "description": "Default templates for repo-ready",
+      "repo_info": {
+        "owner": "jhssong",
+        "repo": "repo-ready",
+        "branch": "main"
+      },
+      "lang": "en",
+      "files": [
+        {
+          "remote_path": "src/templates/en/.github/ISSUE_TEMPLATE/feature_request.yml",
+          "local_path": ".github/ISSUE_TEMPLATE/feature_request.yml"
+        },
+        {
+          "remote_path": "src/templates/en/.github/ISSUE_TEMPLATE/bug_report.yml",
+          "local_path": ".github/ISSUE_TEMPLATE/bug_report.yml"
+        },
+        {
+          "remote_path": "src/templates/en/.github/ISSUE_TEMPLATE/config.yml",
+          "local_path": ".github/ISSUE_TEMPLATE/config.yml"
+        },
+        {
+          "remote_path": "src/templates/en/.github/PULL_REQUEST_TEMPLATE.md",
+          "local_path": ".github/PULL_REQUEST_TEMPLATE.md"
+        }
+      ]
+    }
+  ],
+  "hooks": [
+    {
+      "id": 1,
+      "name": "Repo-ready Simple Commits Hooks",
+      "description": "Enforce commit message rules, Prettier/ESLint formatting, and simple branch naming",
+      "repo_info": {
+        "owner": "jhssong",
+        "repo": "repo-ready",
+        "branch": "main"
+      },
+      "lang": "en",
+      "files": [
+        {
+          "remote_path": "src/templates/en/.githooks/commit-msg",
+          "local_path": ".githooks/commit-msg"
+        },
+        {
+          "remote_path": "src/templates/en/.githooks/pre-commit",
+          "local_path": ".githooks/pre-commit"
+        },
+        {
+          "remote_path": "src/templates/en/.githooks/pre-push-simple",
+          "local_path": ".githooks/pre-push"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Repo-ready Conventional Commits Hooks",
+      "description": "Enforce commit message rules, Prettier/ESLint formatting, and conventional branch naming",
+      "repo_info": {
+        "owner": "jhssong",
+        "repo": "repo-ready",
+        "branch": "main"
+      },
+      "lang": "en",
+      "files": [
+        {
+          "remote_path": "src/templates/en/.githooks/commit-msg",
+          "local_path": ".githooks/commit-msg"
+        },
+        {
+          "remote_path": "src/templates/en/.githooks/pre-commit",
+          "local_path": ".githooks/pre-commit"
+        },
+        {
+          "remote_path": "src/templates/en/.githooks/pre-push-conventional",
+          "local_path": ".githooks/pre-push"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Repo-ready Jira-Style Branch Naming Hooks",
+      "description": "Enforce commit message rules, Prettier/ESLint formatting, and Jira-style branch naming",
+      "repo_info": {
+        "owner": "jhssong",
+        "repo": "repo-ready",
+        "branch": "main"
+      },
+      "lang": "en",
+      "files": [
+        {
+          "remote_path": "src/templates/en/.githooks/commit-msg",
+          "local_path": ".githooks/commit-msg"
+        },
+        {
+          "remote_path": "src/templates/en/.githooks/pre-commit",
+          "local_path": ".githooks/pre-commit"
+        },
+        {
+          "remote_path": "src/templates/en/.githooks/pre-push-jira",
+          "local_path": ".githooks/pre-push"
+        }
+      ]
+    }
+  ],
+  "labels": [
+    {
+      "id": 1,
+      "name": "Repo-ready Labels",
+      "description": "Default labels for repo-ready",
+      "repo_info": {
+        "owner": "jhssong",
+        "repo": "repo-ready",
+        "branch": "main"
+      },
+      "lang": "en",
+      "source_type": "json_url",
+      "source_path": "en/labels/labels.json"
+    }
+  ]
+}
